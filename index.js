@@ -42,6 +42,8 @@ class LooperQuestion{
 
 const TAB = '    '; //4 spaces
 
+const TELL_ME_MORE_MSG = '*** Tell me more ***';
+
 
 // 1st batch of questions (up till installation instructions)
 const questionsBatch1 = [
@@ -130,7 +132,8 @@ const licenseChoices = [
     'MIT License',
     'Mozilla Public License 2.0',
     'The Unlicense',
-    "** I'm confused, tell me more **"
+    "** I don't want to include a license in my README **",
+    TELL_ME_MORE_MSG
 ];
 
 const questionsBatch5 = [
@@ -148,7 +151,7 @@ const questionsBatch5 = [
         {
             choices: licenseChoices.slice(0, -1),
             when: ({license1}) => {
-                if (license1 === "** I'm confused, tell me more **"){
+                if (license1 === TELL_ME_MORE_MSG){
                     open('https://choosealicense.com/licenses/');
                     return true;
                 }
@@ -183,14 +186,14 @@ const questionsBatch6 = [
         'rawlist',
         'contribCovenant1',
         'Do you want to include the Contributor Covenant in your README?',
-        {choices: ['Yes', 'No', '** Tell me more **']}),
+        {choices: ['Yes', 'No', TELL_ME_MORE_MSG]}),
     new Question(
         'confirm',
         'contribCovenant2',
         "Now that you've read up on the Contributor Covenant a bit, would you like to include it in your README?",
         {
             when: ({contribCovenant1}) => {
-                if (contribCovenant1 === '** Tell me more **'){
+                if (contribCovenant1 === TELL_ME_MORE_MSG){
                     open('https://www.contributor-covenant.org/');
                     return true;
                 }
