@@ -21,11 +21,11 @@ class Question{
             this[property] = otherPropsObj[property];
     }
 
-    static validator(input, errMsg){
+    static validator(input){
         if (input)
             return true;
         
-        console.log('  * ' + errMsg);
+        console.log("  * Don't leave this blank!");
         return false;
     }
 }
@@ -47,14 +47,29 @@ const TAB = '    '; //4 spaces
 const questionsBatch1 = [
     new Question(
         'input',
+        'name',
+        "What's your full name?",
+        {validate: input => Question.validator(input)}),
+    new Question(
+        'input',
+        'emailAddress',
+        "What's your email address?",
+        {validate: input => Question.validator(input)}),
+    new Question(
+        'input',
+        'github',
+        "What's your GitHub username?",
+        {validate: input => Question.validator(input)}),
+    new Question(
+        'input',
         'title',
-        'What is the title of your project?',
-        {validate: input => Question.validator(input, "Please enter your project's title!")}),
+        "What's the title of your project?",
+        {validate: input => Question.validator(input)}),
     new Question(
         'input',
         'desc',       
         'Provide a description of your project:',
-        {validate: input => Question.validator(input, 'Please enter a description of your project!')}),
+        {validate: input => Question.validator(input)}),
     new Question(
         'confirm',
         'confTOC',
@@ -68,17 +83,22 @@ const questionsBatch1 = [
 ];
 
 
-// 2nd batch of questions (up till collaborators)
+// 2nd batch of questions (up till add'l collaborators)
 const questionsBatch2 = [
     new Question(
         'input',
         'usageInstructions',
-        'Provide instructions / examples for your project:',
-        {validate: input => Question.validator(input, "Please enter instructions / examples for your project!")}),
+        'Provide instructions / examples describing how to use your project:',
+        {validate: input => Question.validator(input)}),
+    new Question(
+        'confirm',
+        'confAddlCollaborators',
+        'Do you want to include additional collaborators?',
+        {default: false}),
 ];
 
 
-// 3rd batch of questions (ask about third-party assets)
+// 3rd batch of questions (ask about crediting third-party assets)
 const questionsBatch3 = [
     new Question(
         'confirm',
@@ -100,44 +120,94 @@ const questionsBatch4 = [
 ];
 
 
-// 5th batch of questions
+// 5th batch of questions (up till features)
+const licenseChoices = [
+    'Apache License 2.0',
+    'Boost Software License 1.0',
+    'GNU AGPLv3',
+    'GNU GPLv3',
+    'GNU LGPLv3',
+    'MIT License',
+    'Mozilla Public License 2.0',
+    'The Unlicense',
+    "** I'm confused, tell me more **"
+];
+
 const questionsBatch5 = [
     new Question(
-        'confirm',
-        'confSeeLicenseDetails',
-        `You will now be asked which type of license you'd like to use for your project.
-${TAB}To help you choose, would you like to read more info online about these licenses?
-${TAB}(If you don't know what this means, it's recommended that you select "Yes"!)`
-        ,
-        {default: false}
+        'rawlist',
+        'license1',
+        'Which type of license would you like for your project?',
+        {choices: licenseChoices}
     ),
     new Question(
         'rawlist',
-        'license',
-        'Which type of license would you like for your project?',
+        'license2',
+        "Now that you've read up on licenses a bit, which type of license would you like for your project?"
+        ,
         {
-            choices: [
-                'Apache License 2.0',
-                'Boost Software License 1.0',
-                'GNU AGPLv3',
-                'GNU GPLv3',
-                'GNU LGPLv3',
-                'MIT License',
-                'Mozilla Public License 2.0',
-                'The Unlicense'
-            ],
-            when: ({confSeeLicenseDetails}) => {
-                if (confSeeLicenseDetails)
+            choices: licenseChoices.slice(0, -1),
+            when: ({license1}) => {
+                if (license1 === "** I'm confused, tell me more **"){
                     open('https://choosealicense.com/licenses/');
-                return true;
+                    return true;
+                }
+
+                return false;
             }
-        }
+        }),
+    new Question(
+        'confirm',
+        'confFeatures',
+        "Do you want to include a list of your project's features?",
+        {default: false}
     )
 ]
 
 
+// 6th batch of questions (the last batch)
+const questionsBatch6 = [
+    new Question(
+        'confirm',
+        'confContribStandardLang',
+        `For the section about how the public can make contributions to your project,
+  do you want to use standard language? (Select "No" to write your own)`
+        ,
+        {default: true}),
+    new Question(
+        'input',
+        'contribLanguage',
+        `${TAB}Provide language about how the public can make contributions:`,
+        {when: ({confContribStandardLang}) => !confContribStandardLang}),
+    new Question(
+        'rawlist',
+        'contribCovenant1',
+        'Do you want to include the Contributor Covenant in your README?',
+        {choices: ['Yes', 'No', '** Tell me more **']}),
+    new Question(
+        'confirm',
+        'contribCovenant2',
+        "Now that you've read up on the Contributor Covenant a bit, would you like to include it in your README?",
+        {
+            when: ({contribCovenant1}) => {
+                if (contribCovenant1 === '** Tell me more **'){
+                    open('https://www.contributor-covenant.org/');
+                    return true;
+                }
 
-//FUNCTIONS
+                return false;
+            }
+        }),
+    new Question(
+        'confirm',
+        'confTesting',
+        'Do you want to include info about testing your application?',
+        {default: false})
+];
+
+
+
+// FUNCTIONS
 
 // Inquirer prompt, prepending results so far
 const inquirerPrompt = (resultsSoFar, questions) => new Promise((resolve) => {
@@ -147,15 +217,15 @@ const inquirerPrompt = (resultsSoFar, questions) => new Promise((resolve) => {
 
 
 // Inquirer looper
-    // atLeastOneRequired = whether or not user is required to answer at least one round of questions
     // title = title of the property in the final object that's returned, e.g. 'install instructions' 'collaborators'
     // unitName: unit being looped over, e.g. 'step' or 'collaborator' 
     // questions = one or more LooperQuestions
-const inquirerLoop = (resultsSoFar, atLeastOneRequired, tab, title, unitName, ...questions) => new Promise((resolve) => {    
+const inquirerLoop = (resultsSoFar, title, unitName, ...questions) => new Promise((resolve) => {    
+    // Capitailze unit name
     unitName = wordToTitlecase(unitName);
 
+    // Set name of overarching output property, and capitalize first letter of title
     let outputPropName = '';
-    
     title = title.split(' ');
     title.forEach((word, index) => 
         index === 0 ? outputPropName += word : outputPropName += wordToTitlecase(word)
@@ -163,7 +233,6 @@ const inquirerLoop = (resultsSoFar, atLeastOneRequired, tab, title, unitName, ..
     title[0] = wordToTitlecase(title[0]);
     title = title.join(' ');
 
-    
     let counter = 1;
     let outputElems = [];
 
@@ -181,11 +250,11 @@ const inquirerLoop = (resultsSoFar, atLeastOneRequired, tab, title, unitName, ..
             roundOfQuestions.push(new Question(
                 'input',
                 q.propName || DEFAULT_PROP_NAME,
-                `${tab ? TAB : ''}- ${title} | ${q.seed} ${unitName} #${counter}${!(atLeastOneRequired && counter === 1) && index === 0 ? ' (or enter "done")' : ''}:`,
+                `${TAB}- ${title} | ${q.seed} ${unitName} #${counter}${index === 0 ? ' (or enter "done")' : ''}:`,
                 {
-                    validate: input => Question.validator(input, "Don't leave this blank!"),
+                    validate: input => Question.validator(input),
                     when: (answersSoFar) => {
-                        if (!(atLeastOneRequired && counter === 1) && moreThanOneQuestion && answersSoFar[firstPropName] === 'done'){ // if first question is answered 'done', skip the rest of the questions in this round, and (below) proceed to resolve()
+                        if (moreThanOneQuestion && answersSoFar[firstPropName] === 'done'){ // if first question is answered 'done', skip the rest of the questions in this round, and (below) proceed to resolve()
                             return false;
                         }
                         
@@ -199,7 +268,7 @@ const inquirerLoop = (resultsSoFar, atLeastOneRequired, tab, title, unitName, ..
             // If 'done' is entered as first answer, resolve this Promise with the results of all previous rounds of questions; otherwise, ask another round
         inquirer.prompt(roundOfQuestions)
             .then((results) => {
-                if (!(atLeastOneRequired && counter === 1) && (moreThanOneQuestion ? results[firstPropName] : results[DEFAULT_PROP_NAME]) === 'done'){
+                if ((moreThanOneQuestion ? results[firstPropName] : results[DEFAULT_PROP_NAME]) === 'done'){
                     let finalOutput = {};
                     finalOutput[outputPropName] = outputElems;
                     resolve({...resultsSoFar, ...finalOutput}); //prepend results so far
@@ -215,7 +284,8 @@ const inquirerLoop = (resultsSoFar, atLeastOneRequired, tab, title, unitName, ..
         ;
     }
 
-    promptNext();
+    // Initialize round #1 of questions
+    promptNext(); 
 });
 
 
@@ -228,27 +298,20 @@ const wordToTitlecase = (word) => {
     return output.join('');
 }
 
-
-
-
-
-
-
     
 // TODO: Create a function to write README file
 const writeToFile = (fileName, data) => {
 
 };
 
-// Initialize app
+
+// Initializer
 const init = () => {
     inquirerPrompt({}, questionsBatch1)
     .then(results => {
         if (results.confInstallInstructions)
             return inquirerLoop(
                 results,
-                false,
-                true,
                 'install instructions',
                 'step',
                 new LooperQuestion('Enter')
@@ -257,22 +320,21 @@ const init = () => {
             return results;
     }).then(results => inquirerPrompt(results, questionsBatch2))
     .then(results => { 
-        return inquirerLoop(
-            results,
-            true,
-            false,
-            'collaborators',
-            'collaborator',
-            new LooperQuestion('Enter name of', 'name'),
-            new LooperQuestion('Enter GitHub username of', 'github')
-        )
+        if (results.confAddlCollaborators)
+            return inquirerLoop(
+                results,
+                'collaborators',
+                'collaborator',
+                new LooperQuestion('Enter name of', 'name'),
+                new LooperQuestion('Enter GitHub username of', 'github')
+            )
+        else
+            return results;
     }).then(results => inquirerPrompt(results, questionsBatch3))
     .then(results => {
         if (results.confThirdParty)
             return inquirerLoop(
                 results,
-                false,
-                true,
                 'third party assets',
                 'asset',
                 new LooperQuestion('Enter name of', 'name'),
@@ -285,8 +347,6 @@ const init = () => {
         if (results.confTutorials)
             return inquirerLoop(
                 results,
-                false,
-                true,
                 'tutorials',
                 'tutorial',
                 new LooperQuestion('Enter name of', 'name'),
@@ -294,15 +354,33 @@ const init = () => {
             );
         else
             return results;
-        
-    }).then(results => inquirerPrompt(results, questionsBatch5)
-    )
-    
-    
-    .then(results =>
+    }).then(results => inquirerPrompt(results, questionsBatch5))
+    .then(results => {
+        if (results.confFeatures)
+            return inquirerLoop(
+                results,
+                'features',
+                'feature',
+                new LooperQuestion('Enter')
+            );
+        else
+            return results;
+    }).then(results => inquirerPrompt(results, questionsBatch6))
+    .then(results =>{
+        if (results.confTesting)
+            return inquirerLoop(
+                results,
+                'tests',
+                'test',
+                new LooperQuestion('Describe')
+            );
+        else
+            return results;
+    }).then(results =>
         console.log(results)
     );
 };
+
 
 
 // INITIALIZE
