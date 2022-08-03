@@ -173,7 +173,7 @@ const questionsBatch5 = [
 ]
 
 
-// 6th batch of questions (the last batch)
+// 6th batch of questions (up till testing)
 const questionsBatch6 = [
     new Question(
         'confirm',
@@ -196,10 +196,11 @@ const questionsBatch6 = [
         'Do you want to include the Contributor Covenant in your README?',
         {choices: ['Yes', 'No', TELL_ME_MORE_MSG]}),
     new Question(
-        'confirm',
+        'rawlist',
         'confContribCovenant2',
         "Now that you've read up on the Contributor Covenant a bit, would you like to include it in your README?",
         {
+            choices: ['Yes', 'No'],
             when: ({confContribCovenant1}) => {
                 if (confContribCovenant1 === TELL_ME_MORE_MSG){
                     open('https://www.contributor-covenant.org/');
@@ -215,6 +216,17 @@ const questionsBatch6 = [
         'Do you want to include info about testing your application?',
         {default: false})
 ];
+
+
+// 7th batch of questions (ask about custom filename)
+const questionsBatch7 = [
+    new Question(
+        'input',
+        'filename',
+        'Enter a custom filename for your README (or press Enter to skip)',
+        {default: 'README'}
+    )
+]
 
 
 
@@ -309,6 +321,40 @@ const wordToTitlecase = (word) => {
     return output.join('');
 }
 
+
+// Data clean up
+const dataCleanup = (data) => {
+    for (let property in data){
+        if (typeof data[property] === 'string')
+            data[property] = data[property].trim();
+        else if (typeof data[property] === 'object')
+            data[property].forEach((elem, index) => {
+                if (typeof elem === 'string')
+                    data[property][index] = data[property][index].trim();
+                else
+                    for (let prop in elem)
+                        elem[prop] = elem[prop].trim();   
+            });
+    }
+
+    if (!(data.license1 === TELL_ME_MORE_MSG))
+        data.license = data.license1;
+    else
+        data.license = data.license2;
+
+    if(!data.confContribCovenant1 === TELL_ME_MORE_MSG){
+        if (data.confContribCovenant1 === 'Yes')
+            data.confContribCovenant = true;
+        else
+            data.confContribCovenant = false;
+    }else{
+        if (data.confContribCovenant2 === 'Yes')
+            data.confContribCovenant = true;
+        else
+            data.confContribCovenant = false;
+    }
+}
+
     
 // TODO: Create a function to write README file
 const writeToFile = (fileName, data) => {
@@ -387,9 +433,10 @@ const init = () => {
             );
         else
             return results;
-    }).then(results =>
-        console.log(results)
-    );
+    }).then(results => {
+        console.log(results);
+        dataCleanup(results);
+    });
 };
 
 
