@@ -49,7 +49,7 @@ const TELL_ME_MORE_MSG = '*** Tell me more ***';
 const questionsBatch1 = [
     new Question(
         'input',
-        'name',
+        'fullName',
         "What's your full name?",
         {validate: input => Question.validator(input)}),
     new Question(
@@ -59,7 +59,7 @@ const questionsBatch1 = [
         {validate: input => Question.validator(input)}),
     new Question(
         'input',
-        'github',
+        'githubUser',
         "What's your GitHub username?",
         {validate: input => Question.validator(input)}),
     new Question(
@@ -69,7 +69,12 @@ const questionsBatch1 = [
         {validate: input => Question.validator(input)}),
     new Question(
         'input',
-        'desc',       
+        'repoName',
+        "What's the name of the project's repo on GitHub?",
+        {validate: input => Question.validator(input)}),
+    new Question(
+        'input',
+        'description',       
         'Provide a description of your project:',
         {validate: input => Question.validator(input)}),
     new Question(
@@ -90,7 +95,7 @@ const questionsBatch2 = [
     new Question(
         'input',
         'usageInstructions',
-        'Provide instructions / examples describing how to use your project:',
+        'Provide instructions / examples that demonstrate how to use your project:',
         {validate: input => Question.validator(input)}),
     new Question(
         'confirm',
@@ -181,19 +186,22 @@ const questionsBatch6 = [
         'input',
         'contribLanguage',
         `${TAB}Provide language about how the public can make contributions:`,
-        {when: ({confContribStandardLang}) => !confContribStandardLang}),
+        {
+            validate: input => Question.validator(input),
+            when: ({confContribStandardLang}) => !confContribStandardLang
+        }),
     new Question(
         'rawlist',
-        'contribCovenant1',
+        'confContribCovenant1',
         'Do you want to include the Contributor Covenant in your README?',
         {choices: ['Yes', 'No', TELL_ME_MORE_MSG]}),
     new Question(
         'confirm',
-        'contribCovenant2',
+        'confContribCovenant2',
         "Now that you've read up on the Contributor Covenant a bit, would you like to include it in your README?",
         {
-            when: ({contribCovenant1}) => {
-                if (contribCovenant1 === TELL_ME_MORE_MSG){
+            when: ({confContribCovenant1}) => {
+                if (confContribCovenant1 === TELL_ME_MORE_MSG){
                     open('https://www.contributor-covenant.org/');
                     return true;
                 }
