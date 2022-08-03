@@ -43,6 +43,7 @@ class LooperQuestion{
 const TAB = '    '; //4 spaces
 
 const TELL_ME_MORE_MSG = '*** Tell me more ***';
+const NO_LICENSE_MSG = "** I don't want to include a license in my README **";
 
 
 // 1st batch of questions (up till installation instructions)
@@ -54,7 +55,7 @@ const questionsBatch1 = [
         {validate: input => Question.validator(input)}),
     new Question(
         'input',
-        'emailAddress',
+        'email',
         "What's your email address?",
         {validate: input => Question.validator(input)}),
     new Question(
@@ -137,7 +138,7 @@ const licenseChoices = [
     'MIT License',
     'Mozilla Public License 2.0',
     'The Unlicense',
-    "** I don't want to include a license in my README **",
+    NO_LICENSE_MSG,
     TELL_ME_MORE_MSG
 ];
 
@@ -218,12 +219,12 @@ const questionsBatch6 = [
 ];
 
 
-// 7th batch of questions (ask about custom filename)
+// 7th batch of questions (ask about filename)
 const questionsBatch7 = [
     new Question(
         'input',
         'filename',
-        'Enter a custom filename for your README (or press Enter to skip)',
+        'Enter a filename for your README:',
         {default: 'README'}
     )
 ]
@@ -233,7 +234,7 @@ const questionsBatch7 = [
 // FUNCTIONS
 
 // Inquirer prompt, prepending results so far
-const inquirerPrompt = (resultsSoFar, questions) => new Promise((resolve) => {
+const inquirerPrompt = (resultsSoFar, questions) => new Promise(resolve => {
     inquirer.prompt(questions)
     .then(theseResults => resolve({...resultsSoFar, ...theseResults}));
 });
@@ -243,7 +244,7 @@ const inquirerPrompt = (resultsSoFar, questions) => new Promise((resolve) => {
     // title = title of the property in the final object that's returned, e.g. 'install instructions' 'collaborators'
     // unitName: unit being looped over, e.g. 'step' or 'collaborator' 
     // questions = one or more LooperQuestions
-const inquirerLoop = (resultsSoFar, title, unitName, ...questions) => new Promise((resolve) => {    
+const inquirerLoop = (resultsSoFar, title, unitName, ...questions) => new Promise(resolve => {    
     // Capitailze unit name
     unitName = wordToTitlecase(unitName);
 
@@ -327,14 +328,18 @@ const dataCleanup = (data) => {
     for (let property in data){
         if (typeof data[property] === 'string')
             data[property] = data[property].trim();
-        else if (typeof data[property] === 'object')
-            data[property].forEach((elem, index) => {
-                if (typeof elem === 'string')
-                    data[property][index] = data[property][index].trim();
-                else
-                    for (let prop in elem)
-                        elem[prop] = elem[prop].trim();   
-            });
+        else if (typeof data[property] === 'object'){
+            if (data[property].length === 0)
+                data[property] = null;
+            else
+                data[property].forEach((elem, index) => {
+                    if (typeof elem === 'string')
+                        data[property][index] = data[property][index].trim();
+                    else
+                        for (let prop in elem)
+                            elem[prop] = elem[prop].trim();   
+                });
+        }
     }
 
     if (!(data.license1 === TELL_ME_MORE_MSG))
@@ -342,7 +347,10 @@ const dataCleanup = (data) => {
     else
         data.license = data.license2;
 
-    if(!data.confContribCovenant1 === TELL_ME_MORE_MSG){
+    if (data.license === NO_LICENSE_MSG)
+        data.license = null;
+
+    if(!(data.confContribCovenant1 === TELL_ME_MORE_MSG)){
         if (data.confContribCovenant1 === 'Yes')
             data.confContribCovenant = true;
         else
@@ -353,13 +361,25 @@ const dataCleanup = (data) => {
         else
             data.confContribCovenant = false;
     }
+
+    return data;
 }
 
     
 // TODO: Create a function to write README file
-const writeToFile = (fileName, data) => {
+const writeToFile = data => new Promise((resolve, reject) => {
+    fs.writeFile(`./dist/${data.filename}.md`, generateMarkdown(data), err => {
+        if (err){
+            reject(err);
+            return;
+        }
 
-};
+        resolve({
+            ok: true,
+            message: `${data.filename}.md sucessfully generated! Check out the 'dist' folder to see the new file.`
+        });
+    })
+});
 
 
 // Initializer
@@ -433,10 +453,12 @@ const init = () => {
             );
         else
             return results;
-    }).then(results => {
-        console.log(results);
-        dataCleanup(results);
-    });
+    }).then(results => inquirerPrompt(results, questionsBatch7))
+    .then(results => {
+        results = dataCleanup(results);
+        return writeToFile(results);
+    }).then(results => console.log(results))
+    .catch(err => console.log(err));
 };
 
 

@@ -1,12 +1,14 @@
 
 // Get markdown for license badge image
-const pullLicenseBadge = (licenseName) => 
-    `[![License: ${licenseName}](https://img.shields.io/badge/license-${licenseName}-informational.svg)](${getLicenseLink(licenseName)}`;
+const pullLicenseBadge = (licenseName) => {
+    let licenseNameForLink = licenseName.split(' ').join('%20');
+    return `[![License: ${licenseName}](https://img.shields.io/badge/License-${licenseNameForLink}-informational.svg)](${getLicenseLink(licenseName)})`;
+}
 
 
 // Get markdown for Contributor Covenant badge image
 const pullContribCovenantBadge = () => 
-    '[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/}';
+    '[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](https://www.contributor-covenant.org/)';
 
 
 // Get link for a given license
@@ -46,11 +48,21 @@ const getLicenseLink = (licenseName) => {
 
 const generateTOCSection = (installInstructions) =>
     `## Table of contents
-${installInstructions.length > 0 ? '- [Installation](#installation)' : ''}
+${installInstructions ? '- [Installation](#installation)' : ''}
 - [Usage](#usage)
 - [Credits](#credits)
 - [License](#license)`
     ;
+
+
+const generateInstallationSection = (installInstructions) => {
+    let output = ['## Installation'];
+    
+    for (const step of installInstructions)
+        output.push(`- ${step}`);
+    
+    return output.join('\n');
+}
 
 
 const generateCollaboratorsList = (collaborators) => {
@@ -87,68 +99,97 @@ const generateLicenseSection = (license) =>
     `## License
 
 ${pullLicenseBadge(license)}
-Learn more about this license at ${getLicenseLink(license)}
+
+Learn more about this license [here](${getLicenseLink(license)}).
 `   ;
 
 
-const generateFeaturesSection = (features) => 
-    ['## Features', '', ...features].join('\n');
+const generateFeaturesSection = (features) => {
+    let output = ['## Features'];
+    
+    for (const feature of features)
+        output.push(`- ${feature}`);
+    
+    return output.join('\n');
+}
 
     
-const generateTestsSection = (tests) => 
-    ['## Tests', '', ...tests].join('\n');
+const generateTestsSection = (tests) => {
+    let output = ['## Tests'];
+    
+    for (const test of tests)
+        output.push(`- ${test}`);
+    
+    return output.join('\n');
+}
 
 
 
 // Generate README.md markdown
-const generateMarkdown = (...data) => 
-    `# ${title}
-${license ? pullLicenseBadge(license) : ''}
+const generateMarkdown = (data) => 
+    `# ${data.title}
+${data.license ? pullLicenseBadge(data.license) : ''}
 
-${confContribCovenant ? pullContribCovenantBadge() : ''}
+${data.confContribCovenant ? pullContribCovenantBadge() : ''}
     
 
+## Repo
+[https://github.com/${data.githubUser}/${data.repoName}](https://github.com/${data.githubUser}/${data.repoName})
+
+
 ## Description
-${description}
+${data.description}
 
 
-${confTOC ? generateTOCSection(installInstructions) : ''}
+${data.confTOC ? generateTOCSection(data.installInstructions) : ''}
+
+
+${data.installInstructions ? generateInstallationSection(data.installInstructions): ''}
 
 
 ## Usage
-${usageInstructions}
+${data.usageInstructions}
 
 
 ## Credits
 
 ### Collaborators
-- ${fullName} ([GitHub](https://github.com/${githubUser}))
-${collaborators.length > 0 ? generateCollaboratorsList(collaborators) : ''}
+- ${data.fullName} ([GitHub](https://github.com/${data.githubUser}))
+${data.collaborators ? generateCollaboratorsList(data.collaborators) : ''}
 
-${thirdPartyAssets.length > 0 ? generateThirdPartyAssetsList(thirdPartyAssets) : ''}
+${data.thirdPartyAssets ? generateThirdPartyAssetsList(data.thirdPartyAssets) : ''}
 
-${tutorials.length > 0 ? generateTutorialsList(tutorials) : ''}
+${data.tutorials ? generateTutorialsList(data.tutorials) : ''}
 
 
-${license ? generateLicenseSection(license) : ''}
+${data.license ? generateLicenseSection(data.license) : ''}
 
-${features ? generateFeaturesSection(features) : ''}
+${data.features ? generateFeaturesSection(data.features) : ''}
 
 
 ## How to contribute
-${confContribStandardLang ?
-    `Feel free to fork this project's [repo](https://github.com/${githubUser}/${repoName}), contribute code, and submit pull requests [here](https://github.com/${githubUser}/${repoName}/pulls)!`
+${data.confContribStandardLang ?
+    `Feel free to fork this project's [repo](https://github.com/${data.githubUser}/${data.repoName}), contribute code, and submit pull requests [here](https://github.com/${data.githubUser}/${data.repoName}/pulls)!`
     :
-    contribLanguage
+    data.contribLanguage
 }
-${confContribCovenant ?
+
+${data.confContribCovenant ?
     `${pullContribCovenantBadge()}
+
 Contributors to this project must follow all guidelines set forth by the [Contributor Covenant](https://www.contributor-covenant.org/).
 `   :
     ''
 }
 
-${tests.length > 0 ? generateTestsSection(tests) : ''}
+
+## Questions
+See me on GitHub [here](https://github.com/${data.githubUser}). 
+
+Feel free to contact me with any questions at [${data.email}](mailto:${data.email}).
+
+
+${data.tests ? generateTestsSection(data.tests) : ''}
 
 `   ;
 
