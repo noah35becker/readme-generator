@@ -106,12 +106,12 @@ const questionsBatch2 = [
 ];
 
 
-// 3rd batch of questions (ask about crediting third-party assets)
+// 3rd batch of questions (ask about crediting third party assets)
 const questionsBatch3 = [
     new Question(
         'confirm',
         'confThirdParty',
-        'Do you want to add any credits for third-party assets?',
+        'Do you want to add any credits for third party assets?',
         {default: false}
     )
 ];
