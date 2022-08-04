@@ -8,6 +8,10 @@
 [https://github.com/noah35becker/readme-generator](https://github.com/noah35becker/readme-generator)
 
 
+## Video walkthrough
+[https://www.youtube.com/watch?v=HTdpjCfHFRU](https://www.youtube.com/watch?v=HTdpjCfHFRU)
+
+
 ## Description
 This is a command-line program for generating README.md files. (The README that you're looking at right now was created using this program!) The program uses the terminal to guide the user through a series of prompts, generating a high-quality README file at the end of the process.
 
