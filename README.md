@@ -31,11 +31,12 @@ This is a command-line program for generating README.md files. (The README that 
 2. Click the green "Code" button, then click "Download ZIP"
 3. Unzip the downloaded folder
 4. Rename the unzipped folder if you want, and move it wherever you'd like on your drive
-5. You're all set!
+5. Open the terminal, ```cd``` to the folder you just downloaded, and then run the command ```npm install``` (*you must have <b>node.js</b> installed for this to work—if you don't, [install it first](https://coding-boot-camp.github.io/full-stack/nodejs/how-to-install-nodejs))
+6. Once ```npm install``` finishes running, you're all set!
 
 
 ## Usage
-Open the terminal, ```cd``` to the source folder you downloaded during [installation](#installation), and then run the command ```node index.js``` to begin. (You must have <b>node.js</b> installed for this to work—if you don't, head over to their [website](https://nodejs.org/) and install it first.) From here, everything should be pretty self-explanatory. 
+If you haven't already, open the terminal and ```cd``` to the source folder you downloaded during [installation](#installation). From there, then run the command ```node index.js``` to begin. The program should be self-explanatory.
 
 Generated README files will appear in the source folder's "dist" subfolder. After running this program to generate a given README, you are welcome to make further manual updates to the file.
 
