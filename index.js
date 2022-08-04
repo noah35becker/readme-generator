@@ -76,7 +76,7 @@ const questionsBatch1 = [
     new Question(
         'input',
         'description',       
-        'Provide a description of your project:',
+        'Provide a description of the project:',
         {validate: input => Question.validator(input)}),
     new Question(
         'confirm',
@@ -96,7 +96,7 @@ const questionsBatch2 = [
     new Question(
         'input',
         'usageInstructions',
-        'Provide instructions / examples that demonstrate how to use your project:',
+        'Provide instructions / examples that demonstrate how to use the project:',
         {validate: input => Question.validator(input)}),
     new Question(
         'confirm',
@@ -146,7 +146,7 @@ const questionsBatch5 = [
     new Question(
         'rawlist',
         'license1',
-        'Which type of license would you like for your project?',
+        'Which type of license would you like for the project?',
         {choices: licenseChoices}
     ),
     new Question(
@@ -168,7 +168,7 @@ const questionsBatch5 = [
     new Question(
         'confirm',
         'confFeatures',
-        "Do you want to include a list of your project's features?",
+        "Do you want to include a list of the project's features?",
         {default: false}
     )
 ]
@@ -179,7 +179,7 @@ const questionsBatch6 = [
     new Question(
         'confirm',
         'confContribStandardLang',
-        `For the section about how the public can make contributions to your project,
+        `For the section about how the public can make contributions to the project,
   do you want to use standard language? (Select "No" to write your own)`
         ,
         {default: true}),
@@ -194,12 +194,12 @@ const questionsBatch6 = [
     new Question(
         'rawlist',
         'confContribCovenant1',
-        'Do you want to include the Contributor Covenant in your README?',
+        'Do you want to include the Contributor Covenant in this README?',
         {choices: ['Yes', 'No', TELL_ME_MORE_MSG]}),
     new Question(
         'rawlist',
         'confContribCovenant2',
-        "Now that you've read up on the Contributor Covenant a bit, would you like to include it in your README?",
+        "Now that you've read up on the Contributor Covenant a bit, would you like to include it in this README?",
         {
             choices: ['Yes', 'No'],
             when: ({confContribCovenant1}) => {
@@ -224,7 +224,7 @@ const questionsBatch7 = [
     new Question(
         'input',
         'filename',
-        'Enter a filename for your README:',
+        'Enter a filename for this README:',
         {default: 'README'}
     )
 ]
