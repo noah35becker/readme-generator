@@ -198,7 +198,9 @@ ${data.tests ? generateTestsSection(data.tests) : ''}
 
 
 ## Questions
-Find me on GitHub [here](https://github.com/${data.githubUser}). If you have any questions, I'd be glad to hear from you—contact me at [${data.email}](mailto:${data.email}).
+You can find me on GitHub [here](https://github.com/${data.githubUser}).
+
+If you have any questions, I'd be glad to hear from you—contact me at [${data.email}](mailto:${data.email}).
 `   ;
 
 
