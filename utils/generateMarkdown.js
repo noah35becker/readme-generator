@@ -67,8 +67,9 @@ ${tests ? '- [Tests](#tests)' : ''}
 const generateInstallationSection = (installInstructions) => {
     let output = ['## Installation'];
     
-    for (const step of installInstructions)
-        output.push(`- ${step}`);
+    installInstructions.forEach ((step, index) => 
+        output.push(`${index + 1}. ${step}`)
+    );
     
     return output.join('\n');
 }
