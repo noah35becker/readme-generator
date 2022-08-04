@@ -19,7 +19,9 @@ This is a command-line program for generating README.md files. You are now viewi
 - [Credits](#credits)
 - [License](#license)
 
+- [Features](#features)
 - [Contributing](#contributing)
+- [Tests](#tests)
 
 - [Questions](#questions)
 - [Screenshot of terminal input*](#screenshot-of-terminal-input)

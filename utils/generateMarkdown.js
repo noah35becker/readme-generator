@@ -152,7 +152,7 @@ ${data.confContribCovenant ? pullContribCovenantBadge() : ''}
 ${data.description}
 
 
-${data.confTOC ? generateTOCSection(data.installInstructions, data.license) : ''}
+${data.confTOC ? generateTOCSection(data.installInstructions, data.license, data.features, data.tests) : ''}
 
 
 ${data.installInstructions ? generateInstallationSection(data.installInstructions): ''}
