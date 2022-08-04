@@ -52,7 +52,7 @@ const getLicenseLink = (licenseName) => {
 
 const generateTOCSection = (installInstructions, license, features, tests) =>
     `<i><b>
-##Table of contents
+## Table of contents
 ${installInstructions ? '- [Installation](#installation)' : ''}
 - [Usage](#usage)
 - [Credits](#credits)
