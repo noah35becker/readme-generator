@@ -28,7 +28,7 @@ This is a command-line program for generating README.md files. You are now viewi
 
 ## Installation
 1. Step 1 of the installation instructions goes here.
-2. ...and Step 2 goes here. You can add as many steps as you like.
+2. ...and Step 2 goes here.
 3. You can add as many steps as you'd like.
 4. (You can also choose to omit this section altogether.)
 
