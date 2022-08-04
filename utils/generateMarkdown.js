@@ -50,13 +50,17 @@ const getLicenseLink = (licenseName) => {
 
 // GENERATE SECTION FUNCTIONS
 
-const generateTOCSection = (installInstructions, license) =>
-    `## <i>Table of contents
+const generateTOCSection = (installInstructions, license, features, tests) =>
+    `## <i><b>Table of contents
 ${installInstructions ? '- [Installation](#installation)' : ''}
 - [Usage](#usage)
 - [Credits](#credits)
 ${license ? '- [License](#license)' : ''}
-</i>`
+${features ? '- [Features](#features)' : ''}
+- [Contributing](#contributing)
+${tests ? '- [Tests](#tests)' : ''}
+- [Questions](#questions)
+</i></b>`
     ;
 
 
