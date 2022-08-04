@@ -323,7 +323,7 @@ const wordToTitlecase = (word) => {
 }
 
 
-// Data clean up
+// Data cleanup
 const dataCleanup = (data) => {
     for (let property in data){
         if (typeof data[property] === 'string')
@@ -366,7 +366,7 @@ const dataCleanup = (data) => {
 }
 
     
-// TODO: Create a function to write README file
+// Write README file
 const writeToFile = data => new Promise((resolve, reject) => {
     fs.writeFile(`./dist/${data.filename}.md`, generateMarkdown(data), err => {
         if (err){

@@ -1,4 +1,6 @@
 
+// UTILITY FUNCTIONS
+
 // Get markdown for license badge image
 const pullLicenseBadge = (licenseName) => {
     let licenseNameForLink = licenseName.split(' ').join('%20');
@@ -46,12 +48,15 @@ const getLicenseLink = (licenseName) => {
 }
 
 
-const generateTOCSection = (installInstructions) =>
-    `## Table of contents
+// GENERATE SECTION FUNCTIONS
+
+const generateTOCSection = (installInstructions, license) =>
+    `## <i>Table of contents
 ${installInstructions ? '- [Installation](#installation)' : ''}
 - [Usage](#usage)
 - [Credits](#credits)
-- [License](#license)`
+${license ? '- [License](#license)' : ''}
+</i>`
     ;
 
 
@@ -125,7 +130,7 @@ const generateTestsSection = (tests) => {
 
 
 
-// Generate README.md markdown
+// GENERATE README MARKDOWN
 const generateMarkdown = (data) => 
     `# ${data.title}
 ${data.license ? pullLicenseBadge(data.license) : ''}
@@ -141,7 +146,7 @@ ${data.confContribCovenant ? pullContribCovenantBadge() : ''}
 ${data.description}
 
 
-${data.confTOC ? generateTOCSection(data.installInstructions) : ''}
+${data.confTOC ? generateTOCSection(data.installInstructions, data.license) : ''}
 
 
 ${data.installInstructions ? generateInstallationSection(data.installInstructions): ''}
@@ -164,10 +169,11 @@ ${data.tutorials ? generateTutorialsList(data.tutorials) : ''}
 
 ${data.license ? generateLicenseSection(data.license) : ''}
 
+
 ${data.features ? generateFeaturesSection(data.features) : ''}
 
 
-## How to contribute
+## Contributing
 ${data.confContribStandardLang ?
     `Feel free to fork this project's [repo](https://github.com/${data.githubUser}/${data.repoName}), contribute code, and submit pull requests [here](https://github.com/${data.githubUser}/${data.repoName}/pulls)!`
     :
@@ -183,16 +189,13 @@ Contributors to this project must follow all guidelines set forth by the [Contri
 }
 
 
-## Questions
-See me on GitHub [here](https://github.com/${data.githubUser}). 
-
-Feel free to contact me with any questions at [${data.email}](mailto:${data.email}).
-
-
 ${data.tests ? generateTestsSection(data.tests) : ''}
 
+
+## Questions
+Find me on GitHub [here](https://github.com/${data.githubUser}). If you have any questions, I'd be glad to hear from you—contact me at [${data.email}](mailto:${data.email}).
 `   ;
 
 
-
+// EXPORT generateMarkdown FUNCTION FOR EXTERNAL USE
 module.exports = generateMarkdown;
