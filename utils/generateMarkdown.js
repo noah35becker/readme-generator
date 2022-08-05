@@ -199,7 +199,7 @@ ${data.tests ? generateTestsSection(data.tests) : ''}
 
 
 ## Questions
-You can find me on GitHub [here](https://github.com/${data.githubUser}).
+My GitHub username is [${data.githubUser}](https://github.com/${data.githubUser}).
 
 If you have any questions, I'd be glad to hear from you—contact me at [${data.email}](mailto:${data.email}).
 `   ;

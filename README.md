@@ -85,7 +85,7 @@ Contributors to this project must follow all guidelines set forth by the [Contri
 
 
 ## Questions
-You can find me on GitHub [here](https://github.com/noah35becker).
+My GitHub username is [noah35becker](https://github.com/noah35becker).
 
 If you have any questions, I'd be glad to hear from you—contact me at [noahbeckercoding@gmail.com](mailto:noahbeckercoding@gmail.com).
 
