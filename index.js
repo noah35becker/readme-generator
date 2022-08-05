@@ -13,9 +13,7 @@ const generateMarkdown = require('./utils/generateMarkdown');
 // Templates
 class Question{
     constructor(type, name, message, otherPropsObj){
-        this.type = type;
-        this.name = name;
-        this.message = message;
+        [this.type, this.name, this.message] = [type, name, message];
 
         for (const property in otherPropsObj)
             this[property] = otherPropsObj[property];
@@ -295,7 +293,7 @@ const inquirerLoop = (resultsSoFar, title, unitName, ...questions) => new Promis
                 if ((moreThanOneQuestion ? results[firstPropName] : results[DEFAULT_PROP_NAME]) === 'done'){
                     let finalOutput = {};
                     finalOutput[outputPropName] = outputElems;
-                    resolve({...resultsSoFar, ...finalOutput}); //prepend results so far
+                    resolve({...resultsSoFar, ...finalOutput}); // prepend results so far
                 }
                 else{
                     outputElems.push(
