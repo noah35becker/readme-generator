@@ -9,7 +9,7 @@
 
 
 ## Video walkthrough
-[https://www.youtube.com/watch?v=HTdpjCfHFRU](https://www.youtube.com/watch?v=HTdpjCfHFRU)
+[https://www.youtube.com/watch?v=ZvouTBLhNdY](https://www.youtube.com/watch?v=ZvouTBLhNdY)
 
 
 ## Description
