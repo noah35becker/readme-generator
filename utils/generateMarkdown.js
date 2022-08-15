@@ -2,7 +2,7 @@
 // UTILITY FUNCTIONS
 
 // Get markdown for license badge image
-const pullLicenseBadge = (licenseName) => {
+const pullLicenseBadge = licenseName => {
     let licenseNameForLink = licenseName.split(' ').join('%20');
     return `[![License: ${licenseName}](https://img.shields.io/badge/License-${licenseNameForLink}-informational.svg)](${getLicenseLink(licenseName)})`;
 }
@@ -14,8 +14,8 @@ const pullContribCovenantBadge = () =>
 
 
 // Get link for a given license
-const getLicenseLink = (licenseName) => {
-    var linkPath;
+const getLicenseLink = licenseName => {
+    let linkPath;
 
     switch (licenseName){
         case 'Apache License 2.0':
@@ -65,7 +65,7 @@ ${tests ? '- [Tests](#tests)' : ''}
     ;
 
 
-const generateInstallationSection = (installInstructions) => {
+const generateInstallationSection = installInstructions => {
     let output = ['## Installation'];
     
     installInstructions.forEach ((step, index) => 
@@ -76,7 +76,7 @@ const generateInstallationSection = (installInstructions) => {
 }
 
 
-const generateCollaboratorsList = (collaborators) => {
+const generateCollaboratorsList = collaborators => {
     let output = [];
 
     for (const collaborator of collaborators)
@@ -86,7 +86,7 @@ const generateCollaboratorsList = (collaborators) => {
 }
 
 
-const generateThirdPartyAssetsList = (thirdPartyAssets) => {
+const generateThirdPartyAssetsList = thirdPartyAssets => {
     let output = ['### Third-party assets'];
     
     for (const asset of thirdPartyAssets)
@@ -96,7 +96,7 @@ const generateThirdPartyAssetsList = (thirdPartyAssets) => {
 }
 
 
-const generateTutorialsList = (tutorials) => {
+const generateTutorialsList = tutorials => {
     let output = ['### Tutorials'];
     
     for (const tutorial of tutorials)
@@ -106,7 +106,7 @@ const generateTutorialsList = (tutorials) => {
 }
 
 
-const generateLicenseSection = (license) =>
+const generateLicenseSection = license =>
     `## License
 
 ${pullLicenseBadge(license)}
@@ -115,7 +115,7 @@ Learn more about this license [here](${getLicenseLink(license)}).
 `   ;
 
 
-const generateFeaturesSection = (features) => {
+const generateFeaturesSection = features => {
     let output = ['## Features'];
     
     for (const feature of features)
@@ -125,7 +125,7 @@ const generateFeaturesSection = (features) => {
 }
 
     
-const generateTestsSection = (tests) => {
+const generateTestsSection = tests => {
     let output = ['## Tests'];
     
     for (const test of tests)
@@ -137,7 +137,7 @@ const generateTestsSection = (tests) => {
 
 
 // GENERATE README MARKDOWN
-const generateMarkdown = (data) => 
+const generateMarkdown = data => 
     `# ${data.title}
 ${data.license ? pullLicenseBadge(data.license) : ''}
 
@@ -164,7 +164,7 @@ ${data.usageInstructions}
 
 ## Credits
 
-### Collaborators
+### ${data.collaborators ? 'Collaborators' : 'Creator'}
 - ${data.fullName} ([GitHub](https://github.com/${data.githubUser}))
 ${data.collaborators ? generateCollaboratorsList(data.collaborators) : ''}
 
