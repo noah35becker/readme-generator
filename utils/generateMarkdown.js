@@ -55,12 +55,13 @@ const generateTOCSection = (installInstructions, license, features, tests) =>
 ## Table of contents
 ${installInstructions ? '- [Installation](#installation)' : ''}
 - [Usage](#usage)
+${features ? '- [Features](#features)' : ''}
+${tests ? '- [Tests](#tests)' : ''}
 - [Credits](#credits)
 ${license ? '- [License](#license)' : ''}
-${features ? '- [Features](#features)' : ''}
 - [Contributing](#contributing)
-${tests ? '- [Tests](#tests)' : ''}
 - [Questions](#questions)
+
 </i></b>`
     ;
 
@@ -68,9 +69,29 @@ ${tests ? '- [Tests](#tests)' : ''}
 const generateInstallationSection = installInstructions => {
     let output = ['## Installation'];
     
-    installInstructions.forEach ((step, index) => 
+    installInstructions.forEach((step, index) => 
         output.push(`${index + 1}. ${step}`)
     );
+    
+    return output.join('\n');
+}
+
+
+const generateFeaturesSection = features => {
+    let output = ['## Features'];
+    
+    for (const feature of features)
+        output.push(`- ${feature}`);
+    
+    return output.join('\n');
+}
+
+
+const generateTestsSection = tests => {
+    let output = ['## Tests'];
+    
+    for (const test of tests)
+        output.push(`- ${test}`);
     
     return output.join('\n');
 }
@@ -115,26 +136,6 @@ Learn more about this license [here](${getLicenseLink(license)}).
 `   ;
 
 
-const generateFeaturesSection = features => {
-    let output = ['## Features'];
-    
-    for (const feature of features)
-        output.push(`- ${feature}`);
-    
-    return output.join('\n');
-}
-
-    
-const generateTestsSection = tests => {
-    let output = ['## Tests'];
-    
-    for (const test of tests)
-        output.push(`- ${test}`);
-    
-    return output.join('\n');
-}
-
-
 
 // GENERATE README MARKDOWN
 const generateMarkdown = data => 
@@ -172,9 +173,7 @@ ${data.thirdPartyAssets ? generateThirdPartyAssetsList(data.thirdPartyAssets) : 
 
 ${data.tutorials ? generateTutorialsList(data.tutorials) : ''}
 
-
 ${data.license ? generateLicenseSection(data.license) : ''}
-
 
 ${data.features ? generateFeaturesSection(data.features) : ''}
 
@@ -193,7 +192,6 @@ Contributors to this project must follow all guidelines set forth by the [Contri
 `   :
     ''
 }
-
 
 ${data.tests ? generateTestsSection(data.tests) : ''}
 
