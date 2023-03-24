@@ -22,11 +22,10 @@ This is a command-line program for generating README.md files. (The README that 
 - [Usage](#usage)
 - [Credits](#credits)
 - [License](#license)
-
 - [Contributing](#contributing)
-
 - [Questions](#questions)
 - [Sample README](#sample-readme)
+
 </i></b>
 
 

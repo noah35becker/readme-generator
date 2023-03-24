@@ -72,6 +72,7 @@ const generateTOCSection = (installInstructions, license, features, tests) => {
     output.push(
         '- [Contributing](#contributing)',
         '- [Questions](#questions)',
+        '',
         '</i></b>'
     );
 
