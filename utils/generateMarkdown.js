@@ -50,20 +50,33 @@ const getLicenseLink = licenseName => {
 
 // GENERATE SECTION FUNCTIONS
 
-const generateTOCSection = (installInstructions, license, features, tests) =>
-    `<i><b>
-## Table of contents
-${installInstructions ? '- [Installation](#installation)' : ''}
-- [Usage](#usage)
-${features ? '- [Features](#features)' : ''}
-${tests ? '- [Tests](#tests)' : ''}
-- [Credits](#credits)
-${license ? '- [License](#license)' : ''}
-- [Contributing](#contributing)
-- [Questions](#questions)
+const generateTOCSection = (installInstructions, license, features, tests) => {
+    const output = ['<i><b>', '## Table of contents'];
 
-</i></b>`
-    ;
+    if (installInstructions)
+        output.push('- [Installation](#installation)');
+
+    output.push('- [Usage](#usage)');
+
+    if (features)
+        output.push('- [Features](#features)');
+
+    if (tests)
+        output.push('- [Tests](#tests)');
+    
+    output.push('- [Credits](#credits)');
+    
+    if (license)
+        output.push('- [License](#license)');
+
+    output.push(
+        '- [Contributing](#contributing)',
+        '- [Questions](#questions)',
+        '</i></b>'
+    );
+
+    return output.join('\n');
+};
 
 
 const generateInstallationSection = installInstructions => {
